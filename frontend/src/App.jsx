@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <h2>InTouch</h2>
+      <h2>InTouch-App</h2>
     </>
   )
 }
