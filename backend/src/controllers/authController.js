@@ -7,6 +7,7 @@ export const signup = async (req,res) => {
     try {
 
         let {fullName,email,password} = req.body;
+
         if(!fullName || !email || !password){
             return res.status(400).json({message : "All Fields are required"}) // 400 -> Bad Req
         }
@@ -24,6 +25,8 @@ export const signup = async (req,res) => {
         const user = await User.findOne({email}); // checks if email already exists in our DB or not
         if(user) return res.status(400).json({message : "Email already exists!"});
 
+        // FOR NEW USER
+        //Securing the Password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
