@@ -35,10 +35,10 @@ export const signup = async (req,res) => {
 
         if(newUser){
 
-            generateToken(newUser._id,res)
-            //Creates a JSON Web Token for the user, Stores it in a secure cookie in res
+            const savedUser = await newUser.save();//Saving Data
 
-            await newUser.save();//Saving Data
+            generateToken(savedUser._id,res)
+            //Creates a JSON Web Token for the user, Stores it in a secure cookie in res
 
             //For Frontend
             res.status(200).json({ 
