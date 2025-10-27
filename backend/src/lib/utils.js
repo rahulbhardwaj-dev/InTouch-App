@@ -2,6 +2,12 @@ import jwt from "jsonwebtoken"
 //JSON Web Token (JWT) is a standard for creating access tokens that are used to authenticate users and secure information.
 
 export const generateToken  = (userId,res) => {
+
+    const {JWT_SECRET} = process.env;
+    if(!JWT_SECRET){
+        throw new Error("JWT_SECRET IS NOT SAVED")
+    }
+
     //For Authentication
     const token = jwt.sign({userId},process.env.JWT_SECRET,{
         expiresIn: "7d",

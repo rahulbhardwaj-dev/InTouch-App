@@ -1,7 +1,11 @@
 import User from "../models/User.js"
 import bcrypt from "bcryptjs"; 
+import dotenv from 'dotenv'
 
 import { generateToken } from "../lib/utils.js";
+import { sendWelcomeEmail } from "../emails/emailhandler.js"
+
+dotenv.config();
 
 export const signup = async (req,res) => {
     try {
@@ -37,7 +41,7 @@ export const signup = async (req,res) => {
 
             const savedUser = await newUser.save();//Saving Data
 
-            generateToken(savedUser._id,res)
+            generateToken(savedUser._id, res)
             //Creates a JSON Web Token for the user, Stores it in a secure cookie in res
 
             //For Frontend
@@ -47,6 +51,13 @@ export const signup = async (req,res) => {
                 email : newUser.email,
                 profilePic : newUser.profilePic
             })
+
+            // Sending Welcome Email
+            try {
+                await sendWelcomeEmail(savedUser.email,savedUser.fullName, process.env.CLIENT_URL)
+            } catch (error) {
+                console.error("Failed to send Welcome Email")
+            }
 
         } else {
             res.status(400).json({message: "Invalid user data"});
