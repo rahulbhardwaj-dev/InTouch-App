@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 
 import { generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailhandler.js"
+import {cloudinary} from "../lib/cloudinary.js"
 
 dotenv.config();
 
@@ -102,4 +103,22 @@ export const logout = (req,res) => {
     res.cookie("jwt","",{maxAge:0})
     // Once cookie is removed
     res.status(200).json({message:"Logged out successfully"})
+}
+
+export const updateProfile = async (req,res) => {
+    try {
+        const profilePic = req.body;
+        if(!profilePic) return res.status(400).json({message:"Profile pic is required"});
+
+        const userId = req.user._id; // we passed in req.user in middleware
+        const uploadRes = await cloudinary.uploader.upload(profilePic);
+
+        const updatedUser = await User.findByIdAndUpdate(userId, {profilePic:uploadRes.secure_url}, {new: true})
+
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        console.error("Error in updateProfile Controller", error);
+        res.status(500).json({message:"Internal server error"});
+    }
 }
