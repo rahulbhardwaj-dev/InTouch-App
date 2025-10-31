@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 
 import { generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailhandler.js"
-import {cloudinary} from "../lib/cloudinary.js"
+import cloudinary from "../lib/cloudinary.js";
 
 dotenv.config();
 
