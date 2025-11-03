@@ -2,6 +2,7 @@ import express from "express"
 import cookieParser from "cookie-parser"
 import dotenv from 'dotenv'
 import path from "path"
+import cors from "cors"
 
 import authRoutes from "./routes/authRoutes.js"
 import messageRoutes from "./routes/messageRoutes.js"
@@ -14,6 +15,7 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json()) // For req.body
+app.use(cors({origin: process.env.CLIENT_URL, credentials: true}))//enable CORS for the frontend URL
 app.use(cookieParser()) 
 
 app.use("/api/auth", authRoutes);

@@ -1,9 +1,22 @@
-import { Route, Routes } from "react-router"
+import { Navigate, Route, Routes } from "react-router"
+import { useAuthStore } from "./store/useAuthStore"
+import { use, useEffect } from "react"
+import toast, { Toaster } from 'react-hot-toast';
+
 import ChatPage from "./pages/ChatPage"
 import LoginPage from "./pages/LoginPage"
 import SignUpPage from "./pages/SignUpPage"
+import PageLoader from "./components/PageLoader"
 
 function App() {
+
+  const {authUser, checkAuth, isCheckingAuthStatus} = useAuthStore();
+
+  useEffect(() => { //useEffect — it runs a piece of code when the component first renders
+    checkAuth();
+  },[checkAuth]);
+
+  if(isCheckingAuthStatus) return <PageLoader />; // Show loader while checking auth status
 
   return (
     // background for the app
@@ -14,12 +27,13 @@ function App() {
       <div className="absolute bottom-0 -right-4 size-96 bg-pink-500 opacity-20 blur-[100px]" />
       
       <Routes>
-        <Route path="/" element={<ChatPage />}/>
-        <Route path="/signup" element={<SignUpPage />}/>
-        <Route path="/login" element={<LoginPage />}/>
+        <Route path="/" element={authUser ? <ChatPage /> : <Navigate to={"/login"} />} />
+        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to={"/"} />} />
+        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />} />
       </Routes>
       
-    </div>
+      <Toaster position="top-center" reverseOrder={false}/>
+    </div>  
   )
 }
 
