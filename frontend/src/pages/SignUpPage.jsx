@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {useAuthStore} from "../store/useAuthStore.js";
-import BorderAnimation from "../components/borderAnimation.jsx"; // to wrap the sign up form in a border animation
+import BorderAnimation from "../components/BorderAnimation.jsx"; // to wrap the sign up form in a border animation
 import { MessageCircleIcon, LockIcon, MailIcon, UserIcon, LoaderIcon } from "lucide-react";
 import { Link } from "react-router";
 
