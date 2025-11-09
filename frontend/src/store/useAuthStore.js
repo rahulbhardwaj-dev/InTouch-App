@@ -72,6 +72,7 @@ export const useAuthStore = create((set) => ({
             toast.success("Profile Picture updated successfully.");
         } catch (error) {
             toast.error(error.response.data.message);
+            console.log("Profile update error:", error);
         }
     }
 

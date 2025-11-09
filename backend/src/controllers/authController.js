@@ -107,7 +107,7 @@ export const logout = (req,res) => {
 
 export const updateProfile = async (req,res) => {
     try {
-        const profilePic = req.body;
+        const {profilePic} = req.body;
         if(!profilePic) return res.status(400).json({message:"Profile pic is required"});
 
         const userId = req.user._id; // we passed in req.user in middleware

@@ -32,7 +32,7 @@ function ProfileHeader(){
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3"> 
                     <div className="avatar online">
-                        <button className="size-14 rounder-full overflow-hidden relative group" onClick={() => fileInputRef.current.click()}>
+                        <button className="size-14 rounded-full overflow-hidden relative group" onClick={() => fileInputRef.current.click()}>
                             <img src={selectedImg || authUser.profilePic || "/avatar.png"} alt="userImg" 
                             className="size-full object-cover" />
 
