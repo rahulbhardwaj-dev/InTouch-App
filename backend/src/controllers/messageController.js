@@ -95,7 +95,7 @@ export const sendMessage = async (req,res) => {
             senderId,
             receiverId,
             text,
-            image: imageURL
+            image: image ? imageURL : null,
         })
 
         await newMsg.save();

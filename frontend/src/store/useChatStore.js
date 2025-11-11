@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {axiosInstance} from '../libs/axios.js';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import useAuthStore from './useAuthStore.js';
 
 export const useChatStore = create((set,get) => ({
     allContacts: [],
@@ -52,5 +53,34 @@ export const useChatStore = create((set,get) => ({
         } finally {
             set({isMessagesLoading: false});
         }
-    }
+    },
+    sendMessage: async (messageData) => {
+        
+        const {selectedUser, messages} = get();
+
+        const {authUser} = useAuthStore.getState();
+
+        const tempId = `temp-${Date.now()}`; // Temporary ID for optimistic UI update
+
+        // Optimistically add the message to the UI
+        const optimisticMessage = {
+        _id: tempId,
+        senderId: authUser._id,
+        receiverId: selectedUser._id,
+        text: messageData.text,
+        image: messageData.image,
+        createdAt: new Date().toISOString(),
+        };
+        
+        set({ messages: [...messages, optimisticMessage] });//updating the message list immediately
+
+        try {
+            const response = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+            set({ messages: messages.concat(response.data) });
+        } catch (error) {
+            set({ messages: messages.filter(msg => msg._id !== tempId) });
+            toast.error("Failed to send message");
+        }
+    },
+
 }))

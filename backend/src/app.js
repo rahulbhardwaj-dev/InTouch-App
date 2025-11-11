@@ -14,7 +14,7 @@ const app = express();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json()) // For req.body
+app.use(express.json({limit: "10mb"})) // For req.body
 app.use(cors({origin: process.env.CLIENT_URL, credentials: true}))//enable CORS for the frontend URL
 app.use(cookieParser()) 
 
