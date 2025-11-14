@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import {useChatStore} from '../store/useChatStore.js';
 import UserLoadingSkeleton from './UserLoadingSkeleton.jsx';
+import {useAuthStore} from '../store/useAuthStore.js';
 
 {/* <div className={`avatar ${onlineUsers.includes(contact._id) ? "online" : "offline"}`}></div> */}
 
 function ContactsList(){
 
     const {getAllContacts, allContacts , isUsersLoading, setSelectedUser} = useChatStore();
-
+    const {onlineUsers} = useAuthStore();
     useEffect(() => {
         getAllContacts();
     }, [getAllContacts])
@@ -23,9 +24,11 @@ function ContactsList(){
                 onClick={() => setSelectedUser(contact)}
                 >
                 <div className="flex items-center gap-3">
-                    <div className="size-12 rounded-full">
-                        <img src={contact.profilePic || "/avatar.png"} alt={contact.fullName} />
-                    </div>
+                    <div className={`avatar ${onlineUsers.includes(contact._id) ? "online" : "offline"}`}>
+                        <div className="size-12 rounded-full">
+                            <img src={contact.profilePic || "/avatar.png"} alt={contact.fullName} />
+                        </div>
+                    </div>    
                     <h4 className="text-slate-200 font-medium truncate">{contact.fullName}</h4>
                 </div>
                 </div>
