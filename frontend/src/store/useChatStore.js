@@ -95,13 +95,14 @@ export const useChatStore = create((set,get) => ({
 
             const currentMessages = get().messages
             set({messages: [...currentMessages, newMsg]})
-        })
 
-        if(isSoundEnabled){
-            const notificationSound = new Audio("/sounds/notification.mp3")
-            notificationSound.currentTime = 0;
-            notificationSound.play().catch((err) => console.log("Audio play failed", err))
-        }
+            if(isSoundEnabled){
+                const notificationSound = new Audio("/sounds/notification.mp3")
+                notificationSound.currentTime = 0;
+                notificationSound.play().catch((err) => console.log("Audio play failed", err))
+            }
+
+        })
     },
     unSubscribeFromMessages: () => {
         const socket = useAuthStore.getState().socket;
