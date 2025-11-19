@@ -1,6 +1,7 @@
 import User from "../models/User.js"
 import Message from "../models/Message.js"
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId } from "../lib/socket.js";
 
 export const getAllContacts = async (req,res) => {
     try {
@@ -69,7 +70,7 @@ export const getMessagesByUserId = async (req,res) => {
 export const sendMessage = async (req,res) => {
     try {
         const {text,image} = req.body; //Message that a user have sent in chat
-        const {id: receiverId} = req.params; 
+        const {id: receiverId} = req.params;  //receiver
         const senderId = req.user._id;
 
         if(!text && !image){ //If user hasn't send anything
@@ -100,6 +101,11 @@ export const sendMessage = async (req,res) => {
 
         await newMsg.save();
 
+        const ReceiverSocketId = getReceiverSocketId(receiverId)
+        if(ReceiverSocketId){
+            io.to(ReceiverSocketId).emit("newMessage", newMsg)
+        }
+        
         res.status(201).json(newMsg)
 
     } catch (error) {
