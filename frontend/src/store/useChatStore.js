@@ -83,27 +83,26 @@ export const useChatStore = create((set,get) => ({
         }
     },
     subscribeToMessages: () => {
+    const { selectedUser, isSoundEnabled } = get();
+    if (!selectedUser) return;
 
-        const {selectedUser, isSoundEnabled} = get();
-        if(!selectedUser) return;
-        
-        const socket = useAuthStore.getState().socket;
-        socket.on("newMessage", (newMsg) => {
+    const socket = useAuthStore.getState().socket;
 
-            const isMessageSentFromSelectedUser = newMsg.senderId === selectedUser._id;
-            if(!isMessageSentFromSelectedUser) return;
+    socket.on("newMessage", (newMessage) => {
+      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
+      if (!isMessageSentFromSelectedUser) return;
 
-            const currentMessages = get().messages
-            set({messages: [...currentMessages, newMsg]})
+      const currentMessages = get().messages;
+      set({ messages: [...currentMessages, newMessage] });
 
-            if(isSoundEnabled){
-                const notificationSound = new Audio("/sounds/notification.mp3")
-                notificationSound.currentTime = 0;
-                notificationSound.play().catch((err) => console.log("Audio play failed", err))
-            }
+      if (isSoundEnabled) {
+        const notificationSound = new Audio("/sounds/notification.mp3");
 
-        })
-    },
+        notificationSound.currentTime = 0; // reset to start
+        notificationSound.play().catch((e) => console.log("Audio play failed:", e));
+      }
+    });
+  },
     unSubscribeFromMessages: () => {
         const socket = useAuthStore.getState().socket;
         socket.off()
