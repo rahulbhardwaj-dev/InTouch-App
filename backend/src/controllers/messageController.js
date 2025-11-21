@@ -86,9 +86,11 @@ export const sendMessage = async (req,res) => {
             return res.status(400).json({Message: "Receiver not found"})
         }
 
+        let imageURL = null;
+
         if(image){ //If user wants to send an image, then 
             let uploadImgMessage = await cloudinary.uploader.upload(image);
-            let imageURL = uploadImgMessage.secure_url;
+            imageURL = uploadImgMessage.secure_url;
         }
 
         //Saving Message in DB
