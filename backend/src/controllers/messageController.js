@@ -88,7 +88,7 @@ export const sendMessage = async (req,res) => {
 
         if(image){ //If user wants to send an image, then 
             let uploadImgMessage = await cloudinary.uploader.upload(image);
-            imageURL = uploadImgMessage.secure_url;
+            let imageURL = uploadImgMessage.secure_url;
         }
 
         //Saving Message in DB
